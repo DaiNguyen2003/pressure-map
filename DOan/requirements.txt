@@ -1,0 +1,8 @@
+opencv-python
+numpy
+matplotlib
+scipy
+flask
+flask-cors
+pandas
+seaborn

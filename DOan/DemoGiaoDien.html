@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Phân Tích Áp Lực Lòng Bàn Chân</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('/DOan/Image/R.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 100vh;
+            color: #333333;
+            overflow-x: hidden;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(167, 162, 162, 0.3);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1100px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        .loader {
+            border: 8px solid #3498db;
+            border-top: 8px solid #2ecc71;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .prose-custom {
+            color: #333333;
+        }
+        .prose-custom h3 {
+            color: #3498db;
+            font-size: 1.6rem;
+            text-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        .prose-custom h3:hover {
+            transform: scale(1.05);
+            color: #2ecc71;
+        }
+        .prose-custom strong {
+            color: #2ecc71;
+        }
+        .prose-custom ul {
+            list-style-position: inside;
+        }
+        .prose-custom li::marker {
+            color: #3498db;
+        }
+        .button-anime {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            color: #ffffff;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+        }
+        .button-anime:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.8);
+            color: #ffffff;
+        }
+        .button-anime::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+        .button-anime:hover::before {
+            left: 100%;
+        }
+        .input-field {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid #3498db;
+            color: #333333;
+            border-radius: 8px;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 12px rgba(250, 250, 250, 0.5);
+            outline: none;
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 12px;
+            text-shadow: 0 0 8px rgba(52, 152, 219, 0.6);
+            transition: all 0.3s ease;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            transition: width 0.4s ease;
+        }
+        .section-title:hover::after {
+            width: 100%;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        .image-container img {
+            border: 3px solid #3498db;
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .image-container img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.7);
+        }
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.7);
+        }
+        .info-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .info-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.7);
+        }
+        footer a {
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            color: #2ecc71;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-8">
+            <h1 class="text-5xl font-bold text-[#3498db] section-title fade-in">🌟 Phân Tích Áp Lực Lòng Bàn Chân</h1>
+            <p class="text-lg text-[#333333] mt-4 fade-in">Hệ thống hỗ trợ phát hiện sớm biến chứng bàn chân ở bệnh nhân đái tháo đường</p>
+            <div class="flex justify-center gap-4 mt-8">
+                <button id="overview-btn" class="button-anime">📚 Tổng Quan</button>
+                <button id="analysis-btn" class="button-anime">📊 Phân Tích Dữ Liệu</button>
+            </div>
+        </header>
+
+        <main class="flex flex-col space-y-12">
+            <!-- Overview Section -->
+            <div id="overview-section" class="bg-[rgba(240,240,240,0.9)] rounded-2xl shadow-2xl p-8 fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left Content -->
+                    <div class="prose-custom">
+                        <h2 class="text-4xl font-bold text-[#3498db] mb-8 section-title">ĐÁI THÁO ĐƯỜNG</h2>
+                        <p class="text-lg text-[#2ecc71] mb-6 font-medium">Cứ 11 người thì có 1 người đang sống với bệnh đái tháo đường*</p>
+                        
+                        <div class="text-[#333333] space-y-4 leading-relaxed">
+                            <p>Đái tháo đường là một bệnh mãn tính xảy ra khi tuyến tụy không sản xuất đủ insulin hoặc khi cơ thể không thể sử dụng hiệu quả insulin mà nó tạo ra. Insulin là một loại hormone do tuyến tụy tạo ra, cho phép các tế bào lấy glucose từ máu và hoạt động giống như một chiếc khóa để mở các tế bào, từ đó glucose có thể được hấp thụ và chuyển hóa thành năng lượng.</p>
+                        </div>
+
+                        <div class="mt-8 bg-[rgba(52,152,219,0.1)] border-l-4 border-[#3498db] p-6 rounded-r-lg">
+                            <h3 class="text-xl font-semibold text-[#3498db] mb-3">🦶 Biến Chứng Bàn Chân</h3>
+                            <p class="text-[#333333]">Biến chứng bàn chân là một trong những hậu quả nghiêm trọng nhất của bệnh đái tháo đường, có thể dẫn đến loét, nhiễm trùng và thậm chí cắt cụt chi nếu không được phát hiện và điều trị kịp thời.</p>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols-2 gap-4 text-center">
+                            <div class="bg-[rgba(46,204,113,0.2)] p-4 rounded-lg">
+                                <div class="text-2xl font-bold text-[#2ecc71]">15%</div>
+                                <div class="text-sm text-[#333333]">Bệnh nhân ĐTĐ có nguy cơ loét bàn chân</div>
+                            </div>
+                            <div class="bg-[rgba(52,152,219,0.2)] p-4 rounded-lg">
+                                <div class="text-2xl font-bold text-[#3498db]">85%</div>
+                                <div class="text-sm text-[#333333]">Cắt cụt chi có thể phòng ngừa được</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Visual - Statistics -->
+                    <div class="relative">
+                        <!-- Main Statistics Cards -->
+                        <div class="space-y-6">
+                            <!-- Header -->
+                            <div class="text-center mb-8">
+                                <h3 class="text-2xl font-bold text-[#f39c12] mb-2">ẢNH HƯỞNG CỦA BÀN CHÂN ĐÁI THÁO ĐƯỜNG</h3>
+                                <div class="w-16 h-1 bg-gradient-to-r from-[#3498db] to-[#2ecc71] mx-auto rounded"></div>
+                            </div>
+
+                            <!-- Statistics Grid -->
+                            <div class="grid grid-cols-3 gap-4">
+                                <!-- Stat 1 -->
+                                <div class="bg-white rounded-xl p-6 text-center shadow-lg border-t-4 border-[#3498db] stat-card">
+                                    <div class="text-3xl mb-2">👥</div>
+                                    <div class="text-2xl font-bold text-[#3498db] mb-1">1 TRONG 4</div>
+                                    <div class="text-sm text-gray-600 font-medium">BỆNH NHÂN</div>
+                                    <div class="text-xs text-gray-500 mt-1">có biến chứng bàn chân</div>
+                                </div>
+
+                                <!-- Stat 2 -->
+                                <div class="bg-white rounded-xl p-6 text-center shadow-lg border-t-4 border-[#f39c12] stat-card">
+                                    <div class="text-3xl mb-2">⏰</div>
+                                    <div class="text-2xl font-bold text-[#f39c12] mb-1">CỨ MỖI 20</div>
+                                    <div class="text-sm text-gray-600 font-medium">GIÂY</div>
+                                    <div class="text-xs text-gray-500 mt-1">có 1 ca cắt cụt</div>
+                                </div>
+
+                                <!-- Stat 3 -->
+                                <div class="bg-white rounded-xl p-6 text-center shadow-lg border-t-4 border-[#2ecc71] stat-card">
+                                    <div class="text-3xl mb-2">📊</div>
+                                    <div class="text-2xl font-bold text-[#2ecc71] mb-1">70%</div>
+                                    <div class="text-sm text-gray-600 font-medium">BỆNH NHÂN</div>
+                                    <div class="text-xs text-gray-500 mt-1">bị cắt cụt</div>
+                                </div>
+                            </div>
+
+                            <!-- Central Message -->
+                            <div class="bg-gradient-to-r from-[rgba(52,152,219,0.1)] to-[rgba(46,204,113,0.1)] rounded-2xl p-6 border border-[rgba(52,152,219,0.3)]">
+                                <h4 class="text-lg font-bold text-[#3498db] mb-3 text-center">BÀN CHÂN ĐÁI THÁO ĐƯỜNG CÓ THỂ ĐE DỌA CUỘC SỐNG</h4>
+                                <p class="text-sm text-[#333333] leading-relaxed text-center">
+                                    Bệnh nhân đái tháo đường có nguy cơ cắt cụt chi cao gấp 15 lần so với những người khác. 
+                                    Đái tháo đường là nguyên nhân hàng đầu dẫn đến đoạn chi trên toàn thế giới.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Decorative Elements -->
+                        <div class="absolute -top-4 -left-4 w-8 h-8 bg-[#3498db] rounded-full opacity-60 animate-pulse"></div>
+                        <div class="absolute -bottom-6 -right-6 w-12 h-12 bg-[#2ecc71] rounded-full opacity-40 animate-pulse" style="animation-delay: 1s;"></div>
+                        <div class="absolute top-1/2 -left-8 w-6 h-6 bg-[#f39c12] rounded-full opacity-50 animate-pulse" style="animation-delay: 2s;"></div>
+                    </div>
+                </div>
+
+                <!-- Key Information Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                    <div class="bg-[rgba(46,204,113,0.2)] border border-[rgba(46,204,113,0.3)] rounded-xl p-6 text-center info-card">
+                        <div class="text-3xl mb-3">🔍</div>
+                        <h3 class="text-lg font-semibold text-[#2ecc71] mb-2">Phát Hiện Sớm</h3>
+                        <p class="text-sm text-[#333333]">Giúp ngăn ngừa các biến chứng nghiêm trọng và cắt cụt chi</p>
+                    </div>
+
+                    <div class="bg-[rgba(52,152,219,0.2)] border border-[rgba(52,152,219,0.3)] rounded-xl p-6 text-center info-card">
+                        <div class="text-3xl mb-3">⚕️</div>
+                        <h3 class="text-lg font-semibold text-[#3498db] mb-2">Theo Dõi Thường Xuyên</h3>
+                        <p class="text-sm text-[#333333]">Kiểm tra áp lực bàn chân định kỳ để phát hiện thay đổi</p>
+                    </div>
+
+                    <div class="bg-[rgba(243,156,18,0.2)] border border-[rgba(243,156,18,0.3)] rounded-xl p-6 text-center info-card">
+                        <div class="text-3xl mb-3">💚</div>
+                        <h3 class="text-lg font-semibold text-[#f39c12] mb-2">Chăm Sóc Tốt</h3>
+                        <p class="text-sm text-[#333333]">Kiểm soát đường huyết và chăm sóc bàn chân đúng cách</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-xs text-[#2ecc71] text-center opacity-75">
+                    * Theo thống kê của Tổ chức Y tế Thế giới (WHO) năm 2024
+                </div>
+            </div>
+
+            <!-- Analysis Section -->
+            <div id="analysis-section" class="hidden space-y-8">
+            <!-- Sensor Data Input Section -->            
+            <div class="relative bg-[rgba(240,240,240,0.9)] rounded-2xl shadow-2xl p-8 fade-in">
+                <h2 class="text-2xl font-bold text-[#333333] mb-6 section-title">1. Nhập dữ liệu cảm biến</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="col-span-2 bg-[rgba(240,240,240,0.5)] p-6 rounded-xl mb-6 fade-in">
+                        <p class="text-sm text-[#333333]">Nhập giá trị áp lực (kg) cho mỗi cảm biến:</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm font-medium w-32 text-[#333333]">M01 (22,103):</label>
+                            <input type="number" id="M01" value="0" step="0.01" class="input-field w-28">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm font-medium w-32 text-[#333333]">M02 (14,75):</label>
+                            <input type="number" id="M02" value="0" step="0.01" class="input-field w-28">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm font-medium w-32 text-[#333333]">M03 (32,75):</label>
+                            <input type="number" id="M03" value="0" step="0.01" class="input-field w-28">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm font-medium w-32 text-[#333333]">M04 (8,40):</label>
+                            <input type="number" id="M04" value="0" step="0.01" class="input-field w-28">
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm font-medium w-32 text-[#333333]">M05 (22,40):</label>
+                            <input type="number" id="M05" value="0" step="0.01" class="input-field w-28">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm font-medium w-32 text-[#333333]">M06 (38,38):</label>
+                            <input type="number" id="M06" value="0" step="0.01" class="input-field w-28">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm font-medium w-32 text-[#333333]">M07 (11,14):</label>
+                            <input type="number" id="M07" value="0" step="0.01" class="input-field w-28">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm font-medium w-32 text-[#333333]">M08 (31,15):</label>
+                            <input type="number" id="M08" value="0" step="0.01" class="input-field w-28">
+                        </div>
+                    </div>
+                   <div class="col-span-2" style="text-align: center;">
+                        <button id="generate-map" class="button-anime">🗺️ Tạo bản đồ áp suất</button>
+                    </div>
+
+                </div>
+            
+
+            </div>
+
+            <!-- Pressure Map Display Section -->
+            <div class="bg-[rgba(240,240,240,0.9)] rounded-2xl shadow-2xl p-8 fade-in">
+                <h2 class="text-2xl font-bold text-[#333333] mb-6 section-title">2. Bản đồ áp lực</h2>
+                <div id="image-preview-container" class="hidden">
+                    <div class="image-container max-w-3xl mx-auto">
+                        <img id="image-preview" class="w-full h-auto" alt="Bản đồ áp lực bàn chân"/>
+                    </div>
+                    <div class="flex justify-center mt-8">
+                        <button id="analyze-button" class="button-anime disabled:opacity-50 disabled:cursor-not-allowed">⚡ Phân tích</button>
+                    </div>
+                </div>
+                <div id="initial-message" class="text-center text-[#333333] py-12 fade-in">
+                    <p class="mb-2">🖼️ Bản đồ áp lực sẽ xuất hiện ở đây</p>
+                    <p class="text-sm">Vui lòng nhập giá trị cảm biến và nhấn "Tạo bản đồ áp lực"</p>
+                </div>
+            </div>
+
+            <!-- Analysis Result Section -->
+            <div class="bg-[rgba(240,240,240,0.9)] rounded-2xl shadow-2xl p-8 fade-in">
+                <h2 class="text-2xl font-bold text-[#333333] mb-6 section-title">3. Kết quả Phân tích từ AI</h2>
+                <div id="analysis-container" class="bg-[rgba(240,240,240,0.5)] rounded-xl p-8">
+                    <div id="loader" class="loader hidden"></div>
+                    <div id="analysis-result" class="prose-custom max-w-none"></div>
+                    <div id="analysis-initial-message" class="text-center text-[#333333] py-8 fade-in">
+                        <p class="mb-2">🤖 Kết quả phân tích của bạn sẽ xuất hiện ở đây.</p>
+                        <p class="text-sm">Vui lòng tạo bản đồ áp lực trước khi phân tích.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="text-center text-base text-[#333333] mt-10 fade-in">
+            <p>HUST _ Hanoi University of Science and Technology </p>
+            <p>© 2025 Nguyễn Hữu Đại_20217341</p>
+            <p class="mt-2">Đây là một ứng dụng demo sử dụng Gemini API để phân tích áp suất bàn chân.</p>
+            <p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với tôi qua email:
+        <a href="mailto:Dai.nh217341@hust.edu.vn" class="text-[#ff79c6] hover:underline">
+            Dai.nh217341@hust.edu.vn
+        </a>
+    </p>
+            <p class="mt-2">Cảm ơn bạn đã sử dụng ứng dụng của tôi! ♥️♥️♥️</p>
+        </footer>
+    </div>
+
+    <script>
+        const GEMINI_API_KEY = "AIzaSyBTLrb5G8Ri3-gUgQo2GFScS10cPooL404";
+        const FLASK_API_URL = "http://127.0.0.1:5000";
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Section toggle functionality
+            const overviewBtn = document.getElementById('overview-btn');
+            const analysisBtn = document.getElementById('analysis-btn');
+            const overviewSection = document.getElementById('overview-section');
+            const analysisSection = document.getElementById('analysis-section');
+
+            // Show overview section by default
+            overviewSection.classList.remove('hidden');
+            overviewBtn.classList.add('bg-[#ff79c6]');
+
+            overviewBtn.addEventListener('click', () => {
+                overviewSection.classList.remove('hidden');
+                analysisSection.classList.add('hidden');
+                overviewBtn.classList.add('bg-[#ff79c6]');
+                analysisBtn.classList.remove('bg-[#ff79c6]');
+            });
+
+            analysisBtn.addEventListener('click', () => {
+                analysisSection.classList.remove('hidden');
+                overviewSection.classList.add('hidden');
+                analysisBtn.classList.add('bg-[#ff79c6]');
+                overviewBtn.classList.remove('bg-[#ff79c6]');
+            });
+            const imagePreviewContainer = document.getElementById('image-preview-container');
+            const imagePreview = document.getElementById('image-preview');
+            const analyzeButton = document.getElementById('analyze-button');
+            const analysisContainer = document.getElementById('analysis-container');
+            const initialMessage = document.getElementById('initial-message');
+            const analysisInitialMessage = document.getElementById('analysis-initial-message');
+            const loader = document.getElementById('loader');
+            const analysisResult = document.getElementById('analysis-result');
+
+            let fileBase64 = null;
+            let fileMimeType = null;
+
+            async function generatePressureMap() {
+                const sensorData = {};
+                const positions = {
+                    'M01': [22, 103], 'M02': [14, 75], 'M03': [32, 75], 'M04': [8, 40
+                    ],
+                    'M05': [22, 40], 'M06': [38, 38], 'M07': [11, 14], 'M08': [31, 15]
+                };
+
+                // Collect sensor values
+                for (let i = 1; i <= 8; i++) {
+                    const sensorId = `M0${i}`;
+                    const value = parseFloat(document.getElementById(sensorId).value);
+                    sensorData[sensorId] = {
+                        position: positions[sensorId].map(x => parseInt(x)),
+                        pressure: parseFloat(value.toFixed(3))
+                    };
+                }
+
+                try {
+                    const response = await fetch(`${FLASK_API_URL}/generate_map`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(sensorData)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    // Update image preview
+                    imagePreview.src = data.image;
+                    imagePreviewContainer.classList.remove('hidden');
+                    initialMessage.classList.add('hidden');
+                    fileBase64 = data.image.split(',')[1];
+                    fileMimeType = 'image/png';
+
+                    // Clear previous analysis
+                    analysisResult.innerHTML = '';
+                    analysisInitialMessage.classList.remove('hidden');
+                    
+                    // Enable analyze button
+                    analyzeButton.disabled = !checkApiKey();
+
+                } catch (error) {
+                    alert(`Lỗi khi tạo bản đồ áp suất: ${error.message}`);
+                }
+            }
+
+            function checkApiKey() {
+                if (!GEMINI_API_KEY || GEMINI_API_KEY === "PASTE_YOUR_API_KEY_HERE") {
+                    console.error("⚠️ API Key chưa được cấu hình!");
+                    return false;
+                }
+                return true;
+            }
+            
+            async function getAIAnalysis() {
+                if (!checkApiKey()) {
+                    alert('⚠️ API key chưa được cấu hình!\n\nVui lòng mở file HTML và thay đổi dòng:\nconst GEMINI_API_KEY = "PASTE_YOUR_API_KEY_HERE";\nthành API key thật của bạn.');
+                    return;
+                }
+
+                if (!fileBase64 || !fileMimeType) {
+                    alert('Không có hình ảnh để phân tích.');
+                    return;
+                }
+
+                // Show loading state
+                loader.classList.remove('hidden');
+                analysisInitialMessage.classList.add('hidden');
+                analysisResult.innerHTML = '';
+                analyzeButton.disabled = true;
+                analyzeButton.textContent = '🔄 Đang phân tích...';
+
+                const prompt = `
+                Bạn là một chuyên gia về sức khỏe bàn chân (bác sĩ chuyên khoa bàn chân).
+Tôi sẽ cung cấp cho bạn một bản đồ nhiệt áp suất lòng bàn chân, trong đó:
+
+Màu xanh dương và xanh lá: áp suất thấp
+
+Màu vàng: áp suất trung bình
+
+Màu cam và đỏ: áp suất cao
+
+Hãy phân tích hình ảnh một cách chi tiết và dễ hiểu cho người không có nền y khoa, tập trung vào những nội dung sau:
+
+1. 📊 Tóm tắt phân bố áp suất (Chẩn đoán sơ bộ)
+Mô tả những vùng nào đang chịu áp lực lớn nhất (gót chân, đầu ngón chân, vòm bàn chân…).
+
+Nhận xét về sự phân bố áp lực có đều hay lệch, và ý nghĩa của điều đó đối với dáng đi, tư thế hoặc thói quen di chuyển của người được đo.
+Nhận xét thật chi tiết về các vùng áp lực, nguyên nhân có thể là do:
+- Thói quen đi lại (đi giày cao gót, đi bộ nhiều, chạy bộ không đúng cách)
+- Bệnh lý (bàn chân bẹt, viêm khớp, thoái hóa khớp…)
+- Chấn thương
+- Tình trạng sức khỏe chung (béo phì, tiểu đường, tuần hoàn kém…)
+                Hãy sử dụng ngôn ngữ dễ hiểu, tránh thuật ngữ y khoa phức tạp.
+                Hãy giải thích các khái niệm bằng ngôn ngữ gần gũi, dễ hiểu.
+2. ⚠️ Rủi ro sức khỏe tiềm ẩn
+Dựa trên bản đồ áp suất, chỉ ra những vấn đề có thể xảy ra như:
+
+Viêm gan chân (đau vùng lòng bàn chân)
+
+Tăng áp lực ở gót hoặc đầu ngón (nguy cơ chai chân, đau xương, lệch ngón…)
+
+Dáng đi không đều dẫn đến mỏi chân, đau lưng, hoặc chấn thương khớp gối
+
+3. 👟 Gợi ý cải thiện & chăm sóc
+Đề xuất những giải pháp dễ thực hiện như:
+
+Loại giày phù hợp (giày thể thao, giày chỉnh hình, có đệm gót hoặc hỗ trợ vòm chân)
+
+Bài tập đơn giản giúp giảm áp lực và thư giãn cơ bàn chân
+
+Trường hợp nào nên tìm gặp bác sĩ chuyên khoa để được tư vấn và can thiệp kịp thời
+
+🔍 Lưu ý cách viết:
+Không dùng từ ngữ chuyên môn y khoa phức tạp
+
+Giải thích khái niệm bằng ngôn ngữ gần gũi, rõ ràng
+
+Văn phong chuyên nghiệp, nhẹ nhàng, có sự thấu hiểu với người đang gặp vấn đề về sức khỏe bàn chân
+
+Hãy phân tích bản đồ áp suất dưới đây và cung cấp kết quả chi tiết nhất có thể:
+                `;
+                
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+                const payload = {
+                    contents: [{
+                        role: "user",
+                        parts: [
+                            { text: prompt },
+                            {
+                                inlineData: {
+                                    mimeType: fileMimeType,
+                                    data: fileBase64
+                                }
+                            }
+                        ]
+                    }],
+                    generationConfig: {
+                        temperature: 0.4,
+                        topK: 32,
+                        topP: 1,
+                        maxOutputTokens: 2048,
+                    }
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorBody = await response.text();
+                        let errorMessage = `Lỗi API: ${response.status}`;
+                        
+                        if (response.status === 400) {
+                            errorMessage = 'API key không hợp lệ hoặc hết hạn. Vui lòng kiểm tra lại.';
+                        } else if (response.status === 429) {
+                            errorMessage = 'Đã vượt quá giới hạn sử dụng. Vui lòng thử lại sau.';
+                        } else if (response.status === 403) {
+                            errorMessage = 'API key không có quyền truy cập. Vui lòng kiểm tra cấu hình.';
+                        }
+                        
+                        throw new Error(errorMessage);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates[0] && result.candidates[0].content) {
+                        let text = result.candidates[0].content.parts[0].text;
+                        
+                        // Enhanced Markdown to HTML conversion
+                        text = text.replace(/### (.*)/g, '<h3 class="text-lg font-semibold mt-6 mb-3 text-[#ff79c6]">$1</h3>');
+                        text = text.replace(/## (.*)/g, '<h2 class="text-xl font-bold mt-8 mb-4 text-[#333333]">$1</h2>');
+                        text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-[#333333]">$1</strong>');
+                        text = text.replace(/\* (.*?)(?=\n|$)/g, '<li class="ml-4 mb-1 text-[#333333]">$1</li>');
+                        text = text.replace(/(<li.*?<\/li>(?:\s*<li.*?<\/li>)*)/gs, '<ul class="mb-4 space-y-1">$1</ul>');
+                        text = text.replace(/\n\n/g, '</p><p class="mb-4">');
+                        text = '<p class="mb-4">' + text + '</p>';
+                        text = text.replace(/<p class="mb-4"><\/p>/g, '');
+
+                        analysisResult.innerHTML = text;
+                        
+                        // Scroll to results
+                        analysisContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        
+                    } else {
+                        throw new Error("Phản hồi từ API không hợp lệ hoặc không có nội dung.");
+                    }
+
+                } catch (error) {
+                    console.error("Lỗi khi gọi Gemini API:", error);
+                    analysisResult.innerHTML = `
+                        <div class="bg-[rgba(255,75,75,0.2)] border border-[rgba(255,75,75,0.5)] rounded-lg p-4">
+                            <h3 class="text-[#ff5555] font-semibold mb-2">❌ Đã xảy ra lỗi</h3>
+                            <p class="text-[#ff9999]">${error.message}</p>
+                            <p class="text-[#ff9999] text-sm mt-2">Vui lòng kiểm tra API key và thử lại.</p>
+                        </div>
+                    `;
+                } finally {
+                    loader.classList.add('hidden');
+                    analyzeButton.disabled = !checkApiKey();
+                    analyzeButton.textContent = '⚡ Phân tích';
+                }
+            }
+
+            // Event listeners
+            document.getElementById('generate-map').addEventListener('click', generatePressureMap);
+            analyzeButton.addEventListener('click', getAIAnalysis);
+            
+            // Initialize - check API key on load
+            if (!checkApiKey()) {
+                analyzeButton.disabled = true;
+                analysisInitialMessage.innerHTML = `
+                    <div class="text-center text-[#ff9999]">
+                        <p class="mb-2">⚠️ <strong>API Key chưa được cấu hình</strong></p>
+                        <p class="text-sm">Vui lòng mở file HTML và cấu hình API key ở đầu phần JavaScript.</p>
+                        <p class="text-xs mt-2 text-[#bd93f9]">Tìm dòng: const GEMINI_API_KEY = "PASTE_YOUR_API_KEY_HERE";</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
